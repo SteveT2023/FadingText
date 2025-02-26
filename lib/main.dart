@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +21,26 @@ class _darkAndLightMode extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Fading Text Animations'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Animation 1'),
+                Tab(text: 'Animation 2'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              FadingTextAnimation(),
+              SecondFadingTextAnimation(),
+            ],
+          ),
+        ),
+      ),
       theme: _isLightMode ? ThemeData.light() : ThemeData.dark(),
       home: FadingTextAnimation(toggleMode : toggleMode, isLightMode : _isLightMode),
     );
@@ -37,6 +58,7 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  Color _textColor = Colors.black;
 
   void toggleVisibility() {
     setState(() {
@@ -44,10 +66,44 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
     });
   }
 
+  void changeColor(Color color) {
+    setState(() {
+      _textColor = color;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('First Fading Text Animation'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.color_lens),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Pick a color'),
+                  content: SingleChildScrollView(
+                    child: BlockPicker(
+                      pickerColor: _textColor,
+                      onColorChanged: changeColor,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text('Got it'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
         title: Text('Fading Text Animation'),
         actions:[
           IconButton(
@@ -65,8 +121,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
           curve: Curves.easeInOut,
           child: const Text(
             'Hello, Flutter!',
-            style: TextStyle(fontSize: 24),
-            ),
+            style: TextStyle(fontSize: 24, color: _textColor),
           ),
         ),
       ),
@@ -76,4 +131,104 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       ),
     );
   }
+}
+
+class SecondFadingTextAnimation extends StatefulWidget {
+  @override
+  _SecondFadingTextAnimationState createState() => _SecondFadingTextAnimationState();
+}
+
+class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
+  bool _isVisible = true;
+  bool _showFrame = false;
+  Color _textColor = Colors.black;
+
+  void toggleVisibility() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
+
+  void changeColor(Color color) {
+    setState(() {
+      _textColor = color;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Fading Text Animation'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.color_lens),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Pick a color'),
+                  content: SingleChildScrollView(
+                    child: BlockPicker(
+                      pickerColor: _textColor,
+                      onColorChanged: changeColor,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text('Got it'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+            style: TextStyle(fontSize: 24),
+            ),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedOpacity(
+              opacity: _isVisible ? 1.0 : 0.0,
+              duration: Duration(seconds: 3),
+              child: Container(
+                decoration: _showFrame
+                    ? BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2.0),
+                      )
+                    : null,
+                child: Text(
+                  'Hello, Flutter!',
+                  style: TextStyle(fontSize: 24, color: _textColor),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SwitchListTile(
+              title: Text('Show Frame'),
+              value: _showFrame,
+              onChanged: (bool value) {
+                setState(() {
+                  _showFrame = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: toggleVisibility,
+        child: Icon(Icons.play_arrow),
+      ),
+    );
+  }
+}
+
+=======
 }

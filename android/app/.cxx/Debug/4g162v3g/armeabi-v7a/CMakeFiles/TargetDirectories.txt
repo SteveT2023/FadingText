@@ -1,0 +1,2 @@
+/Users/evelyn.e/Desktop/Spring2025/MAD/FadingText/android/app/.cxx/Debug/4g162v3g/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/evelyn.e/Desktop/Spring2025/MAD/FadingText/android/app/.cxx/Debug/4g162v3g/armeabi-v7a/CMakeFiles/rebuild_cache.dir
