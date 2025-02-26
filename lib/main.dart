@@ -4,23 +4,25 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatefulWidget {
   @override
-  _darkAndLightMode createState() => _darkAndLightMode();
-  }
+  _DarkAndLightModeState createState() => _DarkAndLightModeState();
+}
 
-class _darkAndLightMode extends State<MyApp> {
+class _DarkAndLightModeState extends State<MyApp> {
   bool _isLightMode = true;
 
-  void toggleMode () {
-    setState((){
-      _isLightMode =! _isLightMode;
+  void toggleMode() {
+    setState(() {
+      _isLightMode = !_isLightMode;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: _isLightMode ? ThemeData.light() : ThemeData.dark(),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -35,14 +37,12 @@ class _darkAndLightMode extends State<MyApp> {
           ),
           body: TabBarView(
             children: [
-              FadingTextAnimation(),
+              FadingTextAnimation(toggleMode: toggleMode, isLightMode: _isLightMode),
               SecondFadingTextAnimation(),
             ],
           ),
         ),
       ),
-      theme: _isLightMode ? ThemeData.light() : ThemeData.dark(),
-      home: FadingTextAnimation(toggleMode : toggleMode, isLightMode : _isLightMode),
     );
   }
 }
@@ -50,8 +50,9 @@ class _darkAndLightMode extends State<MyApp> {
 class FadingTextAnimation extends StatefulWidget {
   final VoidCallback toggleMode;
   final bool isLightMode;
+
   FadingTextAnimation({required this.toggleMode, required this.isLightMode});
-  
+
   @override
   _FadingTextAnimationState createState() => _FadingTextAnimationState();
 }
@@ -103,25 +104,23 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               );
             },
           ),
-        ],
-        title: Text('Fading Text Animation'),
-        actions:[
           IconButton(
             icon: Icon(widget.isLightMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: widget.toggleMode,
-          )
-        ]
+          ),
+        ],
       ),
       body: Center(
         child: GestureDetector(
           onTap: toggleVisibility,
-        child: AnimatedOpacity(
-          opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
-          curve: Curves.easeInOut,
-          child: const Text(
-            'Hello, Flutter!',
-            style: TextStyle(fontSize: 24, color: _textColor),
+          child: AnimatedOpacity(
+            opacity: _isVisible ? 1.0 : 0.0,
+            duration: Duration(seconds: 1),
+            curve: Curves.easeInOut,
+            child: Text(
+              'Hello, Flutter!',
+              style: TextStyle(fontSize: 24, color: _textColor),
+            ),
           ),
         ),
       ),
@@ -185,8 +184,6 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
                 ),
               );
             },
-            style: TextStyle(fontSize: 24),
-            ),
           ),
         ],
       ),
@@ -228,7 +225,4 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
       ),
     );
   }
-}
-
-=======
 }
